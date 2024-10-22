@@ -5,6 +5,7 @@
 #define DHTTYPE DHT11
 #define ledok 11
 #define ledalar 12
+#define buzz 8
 
 DHT sens(pinsen, DHTTYPE);
 
@@ -17,6 +18,7 @@ void setup() {
 
   pinMode(ledok, OUTPUT);
   pinMode(ledalar, OUTPUT);
+  pinMode(buzz, OUTPUT);
 }
 
 void loop() {
