@@ -33,6 +33,10 @@ void loop() {
                                  //recibe las mediciones desde el sensor, las guarda y envia a processing para mostrar
   t = sens.readTemperature();
   h = sens.readHumidity();
+  if (isnan(h) || isnan(t)) {    
+    Serial.println("Error obteniendo los datos del sensor DHT11");
+    return;
+  }
   Serial.write(t);
   Serial.write(h);
   /*                             //muestreo por monitor serial de arduino
