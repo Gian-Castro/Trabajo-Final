@@ -21,8 +21,10 @@ void setup() {
   Serial.begin(9600);
   sens.begin();
 
-  pinMode(ledok, OUTPUT);
-  pinMode(ledalar, OUTPUT);
+  pinMode(ledtemok, OUTPUT);
+  pinMode(ledtemalar, OUTPUT);
+  pinMode(ledhumok, OUTPUT);
+  pinMode(ledhumalar, OUTPUT);
   pinMode(buzz, OUTPUT);
 }
 
