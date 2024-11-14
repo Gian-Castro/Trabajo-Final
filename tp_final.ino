@@ -49,7 +49,7 @@ void loop() {
   Serial.print(t);
   Serial.println(" *C ");*/
                                        //Comprobacion de temperatura máxima, en cuyo caso suena una alarma mientras se enciende led rojo
-  if(t==tmax){
+  if(t>=tmax){
     digitalWrite(ledtemalar, HIGH);
 
     digitalWrite(buzz, HIGH);
@@ -65,7 +65,7 @@ void loop() {
     digitalWrite(ledtemok, HIGH);
   }
                                        //Comprobacion de humedad máxima, en cuyo caso suena una alarma mientras se enciende led rojo
-  if(h==hmax){
+  if(h>=hmax){
     digitalWrite(ledhumalar, HIGH);
 
     digitalWrite(buzz, HIGH);
