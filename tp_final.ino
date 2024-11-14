@@ -1,4 +1,4 @@
-#include <DHT.h>
+y#include <DHT.h>
 #include <DHT_U.h>
 
 #define pinsen 3
@@ -80,7 +80,8 @@ void loop() {
   else{
     digitalWrite(ledhumok, HIGH);
   }
-
+  
+  delay(1000);
                                  //Apagado de leds de temperatura y humedad normal
   digitalWrite(ledtemok, LOW);
   digitalWrite(ledhumok, LOW);
