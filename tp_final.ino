@@ -42,8 +42,8 @@ void loop() {
     Serial.println("Error obteniendo los datos del sensor DHT11");
     return;
   }
-  Serial.write(t);
-  Serial.write(h);
+  Serial.print(t);
+  Serial.print(h);
   /*                             //muestreo por monitor serial de arduino
   Serial.print("Humedad: ");
   Serial.print(h);
