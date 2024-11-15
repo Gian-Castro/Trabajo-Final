@@ -1,5 +1,17 @@
+import processing.serial.*;
+Serial myport;
+
+float t=0;
+float h=0;
+float tmax=100;
+float hmax=100;
+
 void setup(){
   size(500, 360);
+  
+  printArray(Serial.list());
+  String portName = Serial.list()[0];
+  myport = new Serial(this, "COM1", 9600);
 }
 
 void draw(){
@@ -37,16 +49,20 @@ void draw(){
   fill(0, 0, 0);
   text("00.0 ºC", 265, 199);
   
-  fill(247, 247, 0);
-  triangle(350, 85, 374, 85, 362, 60);
-  fill(0, 0, 0);
-  textSize(16);
-  text("!", 361, 82);
+  if(t>=tmax){
+    fill(247, 247, 0);
+    triangle(350, 85, 374, 85, 362, 60);
+    fill(0, 0, 0);
+    textSize(16);
+    text("!", 361, 82);
+  }
   
-  fill(247, 247, 0);
-  triangle(350, 205, 374, 205, 362, 180);
-  fill(0, 0, 0);
-  textSize(16);
-  text("!", 361, 202);
+  if(h>=hmax){
+    fill(247, 247, 0);
+    triangle(350, 205, 374, 205, 362, 180);
+    fill(0, 0, 0);
+    textSize(16);
+    text("!", 361, 202);
+  }
   
 }
