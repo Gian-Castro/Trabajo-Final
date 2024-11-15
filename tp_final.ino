@@ -1,5 +1,6 @@
-y#include <DHT.h>
+#include <DHT.h>
 #include <DHT_U.h>
+#include <EasyBuzzer.h>
 
 #define pinsen 3
 #define DHTTYPE DHT11
@@ -7,7 +8,7 @@ y#include <DHT.h>
 #define ledtemalar 10
 #define ledhumok 11
 #define ledhumalar 12
-#define buzz 8
+
 
 DHT sens(pinsen, DHTTYPE);
 
@@ -25,10 +26,12 @@ void setup() {
   pinMode(ledtemalar, OUTPUT);
   pinMode(ledhumok, OUTPUT);
   pinMode(ledhumalar, OUTPUT);
-  pinMode(buzz, OUTPUT);
+  EasyBuzzer.setPin(8);
+  
 }
 
 void loop() {
+  delay(5000);
                           //recibe los valores maximos desde processing
   tmax = Serial.read();  
   hmax = Serial.read();
@@ -48,41 +51,34 @@ void loop() {
   Serial.print("Temperatura: ");
   Serial.print(t);
   Serial.println(" *C ");*/
-                                       //Comprobacion de temperatura máxima, en cuyo caso suena una alarma mientras se enciende led rojo
-  if(t>=tmax){
-    digitalWrite(ledtemalar, HIGH);
-
-    digitalWrite(buzz, HIGH);
+                                       //Comprobacion de temperatura y/o humedad máxima, en cuyo caso suena una alarma mientras se enciende led rojo
+  if(t>=tmax||h>=hmax){
+    if(t>=tmax){
+      digitalWrite(ledtemalar, HIGH);
+    }
+    if(h>=hmax){
+      digitalWrite(ledhumalar, HIGH);
+    }
+    
+    EasyBuzzer.singleBeep(700, 1500);
+    EasyBuzzer.stopBeep();
+    delay(1000);
+    EasyBuzzer.singleBeep(700, 1500);
+    EasyBuzzer.stopBeep();
     delay(500);
-    digitalWrite(buzz, LOW);
-    delay(250);
-    digitalWrite(buzz, HIGH);
-    delay(500);
-    digitalWrite(buzz, LOW);
-    delay(100);
-  }                                    //Si la temperaura está dentro del rango, solo se prende un led verde
-  else{
-    digitalWrite(ledtemok, HIGH);
-  }
-                                       //Comprobacion de humedad máxima, en cuyo caso suena una alarma mientras se enciende led rojo
-  if(h>=hmax){
-    digitalWrite(ledhumalar, HIGH);
-
-    digitalWrite(buzz, HIGH);
-    delay(500);
-    digitalWrite(buzz, LOW);
-    delay(250);
-    digitalWrite(buzz, HIGH);
-    delay(500);
-    digitalWrite(buzz, LOW);
-    delay(100);
-  }                                 //Si la humedad está dentro del rango, solo se prende un led verde
-  else{
-    digitalWrite(ledhumok, HIGH);
-  }
+  }                                    
+                                         //Si la temperaura y/o humedad está dentro del rango, solo se prende un led verde
+    if(t<tmax){
+      digitalWrite(ledtemok, HIGH);
+    }
+    if(h<hmax){
+      digitalWrite(ledhumok, HIGH);
+    }
   
   delay(1000);
-                                 //Apagado de leds de temperatura y humedad normal
+                                 //Apagado de leds
   digitalWrite(ledtemok, LOW);
   digitalWrite(ledhumok, LOW);
+  digitalWrite(ledtemalar, LOW);
+  digitalWrite(ledhumalar, LOW);
 }
