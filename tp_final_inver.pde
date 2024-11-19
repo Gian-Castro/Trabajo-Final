@@ -6,12 +6,14 @@ float h=0;
 float tmax=100;
 float hmax=100;
 
+String dat[];
+
 void setup(){
   size(500, 360);
   
   printArray(Serial.list());
   String portName = Serial.list()[0];
-  myport = new Serial(this, "COM1", 9600);
+  myport = new Serial(this, portName, 9600);
 }
 
 void draw(){
