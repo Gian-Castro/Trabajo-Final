@@ -1,12 +1,15 @@
 import processing.serial.*;
 Serial myport;
 
-float t=0;
-float h=0;
+float t=000.0;
+float h=000.0;
 float tmax=100;
 float hmax=100;
 
+
 String dat[];
+String tlp;
+
 
 void setup(){
   size(500, 360);
@@ -24,7 +27,9 @@ void draw(){
   textSize(18);
   text("Temp actual", 80, 50);
   fill(0, 0, 0);
-  text("00.0 ºC", 105, 79);
+  String ta = nf(t, 0, 2);
+  text(ta, 105, 79);
+  text("ºC", 150, 79);
   
   fill(244, 121, 134);
   rect(240, 60, 100, 25);
@@ -32,7 +37,9 @@ void draw(){
   textSize(18);
   text("Temp límite", 240, 50);
   fill(0, 0, 0);
-  text("00.0 ºC", 265, 79);
+  String tl = nf(tmax, 0, 2);
+  text(tl, 260, 79);
+  text("ºC", 315, 79);
   
   
   fill(81, 133, 219);
@@ -41,7 +48,9 @@ void draw(){
   textSize(18);
   text("Hum actual", 80, 170);
   fill(0, 0, 0);
-  text("00.0 ºC", 105, 199);
+  String ha = nf(h, 0, 2);
+  text(ha, 105, 199);
+  text("%", 150, 199);
   
   fill(244, 121, 134);
   rect(240, 180, 100, 25);
@@ -49,7 +58,12 @@ void draw(){
   textSize(18);
   text("Hum límite", 240, 170);
   fill(0, 0, 0);
-  text("00.0 ºC", 265, 199);
+  String hl = nf(hmax, 0, 2);
+  text(hl, 260, 199);
+  text("%",315, 199);
+  
+  myport.write(tl);
+  myport.write(hl);
   
   if(t>=tmax){
     fill(247, 247, 0);
@@ -67,4 +81,14 @@ void draw(){
     text("!", 361, 202);
   }
   
+}
+
+void keyTyped() {
+  // The variable "key" always contains the value 
+  // of the most recent key pressed.
+  if ((key >= 'A' && key <= 'z') || key == ' ') {
+    tlp = tlp + key;
+    // Write the letter to the console
+    println(key);
+  }
 }
