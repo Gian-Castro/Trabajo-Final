@@ -17,6 +17,7 @@ void setup(){
   printArray(Serial.list());
   String portName = Serial.list()[0];
   myport = new Serial(this, portName, 9600);
+  tlp = "";
 }
 
 void draw(){
@@ -86,9 +87,18 @@ void draw(){
 void keyTyped() {
   // The variable "key" always contains the value 
   // of the most recent key pressed.
-  if ((key >= 'A' && key <= 'z') || key == ' ') {
-    tlp = tlp + key;
-    // Write the letter to the console
-    println(key);
-  }
+  int enter = 0;
+  do{
+    if ((key >= '0' && key <= '9') || key == '.') {
+      tlp = tlp + key;
+      if(key== 10){
+        enter= key;
+      }
+      // Write the letter to the console
+      //println(key);
+    }
+  }while(enter!=10);
+  println(tlp);
+  tmax = Float.parseFloat(tlp);
+  tlp = "";
 }

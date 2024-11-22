@@ -4,6 +4,7 @@
 
 #define pinsen 3
 #define DHTTYPE DHT11
+#define boton 5
 #define ledtemok 9
 #define ledtemalar 10
 #define ledhumok 11
@@ -16,6 +17,7 @@ float t;
 float h;
 float tmax;
 float hmax;
+int buzzmodo = 1;
 
 
 void setup() {
@@ -44,13 +46,14 @@ void loop() {
   }
   Serial.print(t);
   Serial.print(h);
-  /*                             //muestreo por monitor serial de arduino
+  /*                             //Muestreo por monitor serial de arduino
   Serial.print("Humedad: ");
   Serial.print(h);
   Serial.print(" %\t");
   Serial.print("Temperatura: ");
   Serial.print(t);
   Serial.println(" *C ");*/
+  
                                        //Comprobacion de temperatura y/o humedad máxima, en cuyo caso suena una alarma mientras se enciende led rojo
   if(t>=tmax||h>=hmax){
     if(t>=tmax){
@@ -59,22 +62,34 @@ void loop() {
     if(h>=hmax){
       digitalWrite(ledhumalar, HIGH);
     }
+    if(buzzmodo==1){
+      EasyBuzzer.singleBeep(700, 1500);
+      EasyBuzzer.stopBeep();
+      delay(1000);
+      EasyBuzzer.singleBeep(700, 1500);
+      EasyBuzzer.stopBeep();
+      delay(500);
+    }
     
-    EasyBuzzer.singleBeep(700, 1500);
-    EasyBuzzer.stopBeep();
-    delay(1000);
-    EasyBuzzer.singleBeep(700, 1500);
-    EasyBuzzer.stopBeep();
-    delay(500);
   }                                    
-                                         //Si la temperaura y/o humedad está dentro del rango, solo se prende un led verde
-    if(t<tmax){
-      digitalWrite(ledtemok, HIGH);
-    }
-    if(h<hmax){
-      digitalWrite(ledhumok, HIGH);
-    }
+                                      //Si la temperaura y/o humedad está dentro del rango, solo se prende un led verde
+  if(t<tmax){
+    digitalWrite(ledtemok, HIGH);
+  }
+  if(h<hmax){
+    digitalWrite(ledhumok, HIGH);
+  }
   
+                                  //Prendido/apagado del sonido del buzzer alarma
+  if(digitalRead(boton)==HIGH){
+    if(buzzmodo==0){
+      buzzmodo=1;
+    }
+    else{
+      buzzmodo=0;
+    }
+  }
+
   delay(1000);
                                  //Apagado de leds
   digitalWrite(ledtemok, LOW);
