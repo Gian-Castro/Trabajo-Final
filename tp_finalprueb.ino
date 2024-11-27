@@ -1,5 +1,4 @@
 #include <DHT.h>
-#include <DHT_U.h>
 #include <EasyBuzzer.h>
 
 #define pinsen 3
