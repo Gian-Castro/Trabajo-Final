@@ -9,6 +9,7 @@ float hmax=100;
 
 String dat[];
 String tlp;
+String hlp;
 
 
 void setup(){
@@ -18,6 +19,7 @@ void setup(){
   String portName = Serial.list()[0];
   myport = new Serial(this, portName, 9600);
   tlp = "";
+  hlp = "";
 }
 
 void draw(){
@@ -82,23 +84,43 @@ void draw(){
     text("!", 361, 202);
   }
   
+
 }
 
-void keyTyped() {
-  // The variable "key" always contains the value 
-  // of the most recent key pressed.
-  int enter = 0;
-  do{
-    if ((key >= '0' && key <= '9') || key == '.') {
+void keyPressed(){
+  if((mouseX>=240 && mouseX<=340) && (mouseY>=60 && mouseY<=85)) {
+    // The variable "key" always contains the value 
+    // of the most recent key pressed.
+    if ((key >= '0' && key <= '9') || key == 46) {
       tlp = tlp + key;
-      if(key== 10){
-        enter= key;
-      }
-      // Write the letter to the console
-      //println(key);
+      println(key);
     }
-  }while(enter!=10);
-  println(tlp);
-  tmax = Float.parseFloat(tlp);
-  tlp = "";
+    else{
+      if(key == 10){
+        tlp = "";
+        println("Enter");
+        return;
+      }
+    }
+    println(tlp);
+    tmax = Float.parseFloat(tlp);
+  }
+  
+  if((mouseX>=240 && mouseX<=340) && (mouseY>=180 && mouseY<=205)) {
+    // The variable "key" always contains the value 
+    // of the most recent key pressed.
+    if ((key >= '0' && key <= '9') || key == 46) {
+      hlp = hlp + key;
+      println(key);
+    }
+    else{
+      if(key == 10){
+        hlp = "";
+        println("Enter");
+        return;
+      }
+    }
+    println(hlp);
+    hmax = Float.parseFloat(hlp);
+  }
 }
