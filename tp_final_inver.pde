@@ -1,25 +1,33 @@
 import processing.serial.*;
 Serial myport;
 
-float t=000.0;
-float h=000.0;
+float t=000;
+float h=000;
 float tmax=100;
 float hmax=100;
 
 
-String dat[];
+String tout;
+String hout;
 String tlp;
 String hlp;
+
+String ta;
+String tl;
+String ha;
+String hl;
 
 
 void setup(){
   size(500, 360);
   
   printArray(Serial.list());
-  String portName = Serial.list()[0];
+  String portName = Serial.list()[1];
   myport = new Serial(this, portName, 9600);
   tlp = "";
   hlp = "";
+  ta= "";
+  ha= "";
 }
 
 void draw(){
@@ -30,7 +38,6 @@ void draw(){
   textSize(18);
   text("Temp actual", 80, 50);
   fill(0, 0, 0);
-  String ta = nf(t, 0, 2);
   text(ta, 105, 79);
   text("ºC", 150, 79);
   
@@ -40,7 +47,7 @@ void draw(){
   textSize(18);
   text("Temp límite", 240, 50);
   fill(0, 0, 0);
-  String tl = nf(tmax, 0, 2);
+  tl = nf(tmax, 0, 2);
   text(tl, 260, 79);
   text("ºC", 315, 79);
   
@@ -51,7 +58,6 @@ void draw(){
   textSize(18);
   text("Hum actual", 80, 170);
   fill(0, 0, 0);
-  String ha = nf(h, 0, 2);
   text(ha, 105, 199);
   text("%", 150, 199);
   
@@ -61,12 +67,28 @@ void draw(){
   textSize(18);
   text("Hum límite", 240, 170);
   fill(0, 0, 0);
-  String hl = nf(hmax, 0, 2);
+  hl = nf(hmax, 0, 2);
   text(hl, 260, 199);
   text("%",315, 199);
   
-  myport.write(tl);
-  myport.write(hl);
+  tout = "t" + tmax + "E";
+  println (tout);
+  hout = "h" + hmax + "E";
+  
+  
+  myport.write(tout);
+  myport.write(hout);
+  
+  while (myport.available()>0){
+    String buffer = myport.readStringUntil(10); //caracter ascii del enter
+    //print(buffer);
+    if(buffer.startsWith("t")){
+      ta = buffer.substring(4);
+    }
+    if(buffer.startsWith("h")){
+      ha = buffer.substring(4);
+    }
+  }
   
   if(t>=tmax){
     fill(247, 247, 0);
@@ -93,7 +115,7 @@ void keyPressed(){
     // of the most recent key pressed.
     if ((key >= '0' && key <= '9') || key == 46) {
       tlp = tlp + key;
-      println(key);
+      //println(key);
     }
     else{
       if(key == 10){
@@ -101,8 +123,9 @@ void keyPressed(){
         println("Enter");
         return;
       }
+      //if(key == 8){}
     }
-    println(tlp);
+    //println(tlp);
     tmax = Float.parseFloat(tlp);
   }
   
@@ -111,7 +134,7 @@ void keyPressed(){
     // of the most recent key pressed.
     if ((key >= '0' && key <= '9') || key == 46) {
       hlp = hlp + key;
-      println(key);
+      //println(key);
     }
     else{
       if(key == 10){
@@ -119,8 +142,9 @@ void keyPressed(){
         println("Enter");
         return;
       }
+      //if(key == 8){}
     }
-    println(hlp);
+    //println(hlp);
     hmax = Float.parseFloat(hlp);
   }
 }
