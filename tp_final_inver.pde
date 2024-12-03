@@ -1,5 +1,11 @@
 import processing.serial.*;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
 Serial myport;
+
+FileWriter fw;
+BufferedWriter bw;
+
 
 float t=000;
 float h=000;
@@ -17,6 +23,22 @@ String tl;
 String ha;
 String hl;
 
+String time;
+int d;
+int m;
+int a;
+int ho;
+int mi;
+int se;
+
+boolean alartempmode=false;
+boolean alarhummode=false;
+
+String da;
+String[][] arr = new String[100][3];
+Table tabla;
+
+int i=0;
 
 void setup(){
   size(500, 360);
@@ -28,10 +50,31 @@ void setup(){
   hlp = "";
   ta= "";
   ha= "";
+  
+  da="";
+  
+  tabla = new Table();
+  
+  tabla.addColumn("Fecha y hora");
+  tabla.addColumn("Temp");
+  tabla.addColumn("Hum");
 }
 
 void draw(){
   background(153, 206, 94);
+  
+  fill(180, 178, 178);
+  rect(40, 300, 90, 25);
+  fill(0, 0, 0);
+  textSize(14);
+  text("Guardar logs", 47, 317);
+  
+  fill(180, 178, 178);
+  rect(150, 300, 110, 25);
+  fill(0, 0, 0);
+  textSize(14);
+  text("Guardar alarmas", 157, 317);
+  
   fill(81, 133, 219);
   rect(80, 60, 100, 25);
   fill(37, 57, 239);
@@ -72,23 +115,67 @@ void draw(){
   text("%",315, 199);
   
   tout = "t" + tmax + "E";
-  println (tout);
+  //println (tout);
   hout = "h" + hmax + "E";
   
   
   myport.write(tout);
   myport.write(hout);
   
+  d=day();
+  m=month();
+  a=year();
+  ho=hour();
+  mi=minute();
+  se=second();
+  
+  time= String.valueOf(d) + "/" + String.valueOf(m) + "/" + String.valueOf(a) + " " + String.valueOf(ho) + ":" + String.valueOf(mi) + ":" + String.valueOf(se);
+  //println(time);
+  
+  delay(2000);
   while (myport.available()>0){
     String buffer = myport.readStringUntil(10); //caracter ascii del enter
     //print(buffer);
+    //TableRow newRow = tabla.addRow();
+    //newRow.setString("Fecha y hora", "2024/12/02");
+    //arr[i][0]=time;
+    
     if(buffer.startsWith("t")){
       ta = buffer.substring(4);
+       t = Float.parseFloat(ta);
+       //newRow.setString("Temp", ta);
+       //arr[i][1]= ta;
     }
     if(buffer.startsWith("h")){
       ha = buffer.substring(4);
+      h = Float.parseFloat(ha);
+      //newRow.setString("Hum", ha);
+      //arr[i][2]=ha;
+     
     }
+    /*if(t!=0 && h!=0){
+      
+      i++;
+    }*/
+    /*if(arr[i][1]!="" && arr[i][2]!=""){
+      delay(2000);
+    }*/
   }
+  String taa = str(t);
+  String haa = str(h);
+  
+  arr[i][0] = time;
+  arr[i][1] = taa;
+  arr[i][2] = haa;
+  
+  /*if(arr[i][1]!="" && arr[i][2]!=""){
+    i++;
+  }*/
+  
+  da= arr[i][0] + ","+ arr[i][1] + "," + arr[i][2] + "\n";
+  println(da);
+  
+  i++;
   
   if(t>=tmax){
     fill(247, 247, 0);
@@ -96,6 +183,10 @@ void draw(){
     fill(0, 0, 0);
     textSize(16);
     text("!", 361, 82);
+    alartempmode=true;
+  }
+  else{
+  alartempmode=false;
   }
   
   if(h>=hmax){
@@ -104,9 +195,12 @@ void draw(){
     fill(0, 0, 0);
     textSize(16);
     text("!", 361, 202);
+    alarhummode=true;
+  }
+  else{
+  alarhummode=false;
   }
   
-
 }
 
 void keyPressed(){
@@ -147,4 +241,82 @@ void keyPressed(){
     //println(hlp);
     hmax = Float.parseFloat(hlp);
   }
+  
+  if((mouseX>=40 && mouseX<=130) && (mouseY>=300 && mouseY<=325)) {
+    if(key == 10){
+      println("EnterSave");
+      try{
+        File file =new File("D:/Docomentos/tpfinalfiles/logs_historico.csv");
+        //chemin = dataPath;
+        // positions.txt== your file;
+
+        if(!file.exists()){
+          file.createNewFile();
+        }
+
+        FileWriter fw = new FileWriter(file,true);///true = append
+        BufferedWriter bw = new BufferedWriter(fw);
+        PrintWriter pw = new PrintWriter(bw);
+        
+        /*for(int i=0; i==tabla.getRowCount(); i++){
+          String[] ads = tabla.getStringRow(i);
+          String ds = String.join(",", ads);
+          pw.write(da, 0, ds.length());
+          println(ads[4]);
+        }
+        TableRow row = tabla.getRow(0);
+        println(row.getString("Temp"));*/
+        
+        pw.write(da, 0, da.length());
+        pw.close();
+
+
+     }catch(IOException ioe){
+           System.out.println("Exception ");
+           ioe.printStackTrace();
+      }
+    }
+   
+  }
+  
+  if((mouseX>=150 && mouseX<=260) && (mouseY>=300 && mouseY<=325)) {
+    if(key == 10){
+      if(alartempmode==true || alarhummode==true){
+        println("EnterSave");
+        try{
+          File file =new File("D:/Docomentos/tpfinalfiles/alarmas.csv");
+          //chemin = dataPath;
+          // positions.txt== your file;
+  
+          if(!file.exists()){
+            file.createNewFile();
+          }
+  
+          FileWriter fw = new FileWriter(file,true);///true = append
+          BufferedWriter bw = new BufferedWriter(fw);
+          PrintWriter pw = new PrintWriter(bw);
+          
+          /*for(int i=0; i==tabla.getRowCount(); i++){
+            String[] ads = tabla.getStringRow(i);
+            String ds = String.join(",", ads);
+            pw.write(da, 0, ds.length());
+            println(ads[4]);
+          }
+          TableRow row = tabla.getRow(0);
+          println(row.getString("Temp"));*/
+          
+          pw.write(da, 0, da.length());
+          pw.close();
+  
+  
+       }catch(IOException ioe){
+             System.out.println("Exception ");
+             ioe.printStackTrace();
+        }
+      }
+      
+    }
+   
+  }
+  
 }
