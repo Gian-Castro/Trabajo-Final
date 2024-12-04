@@ -24,12 +24,30 @@ String ha;
 String hl;
 
 String time;
-int d;
-int m;
-int a;
-int ho;
-int mi;
-int se;
+
+class TIEMPO{
+  private
+    int d;
+    int m;
+    int a;
+    int ho;
+    int mi;
+    int se;
+  
+  public
+    void actual(String t){
+      d=day();
+      m=month();
+      a=year();
+      ho=hour();
+      mi=minute();
+      se=second();
+      
+      t= String.valueOf(d) + "/" + String.valueOf(m) + "/" + String.valueOf(a) + " " + String.valueOf(ho) + ":" + String.valueOf(mi) + ":" + String.valueOf(se);
+      //println(time);
+    }
+};
+
 
 boolean alartempmode=false;
 boolean alarhummode=false;
@@ -127,15 +145,8 @@ void draw(){
   myport.write(tout);
   myport.write(hout);
   
-  d=day();
-  m=month();
-  a=year();
-  ho=hour();
-  mi=minute();
-  se=second();
-  
-  time= String.valueOf(d) + "/" + String.valueOf(m) + "/" + String.valueOf(a) + " " + String.valueOf(ho) + ":" + String.valueOf(mi) + ":" + String.valueOf(se);
-  //println(time);
+ TIEMPO tiempo1;
+ tiempo1.actual(time);
   
   delay(2000);
   while (myport.available()>0){
