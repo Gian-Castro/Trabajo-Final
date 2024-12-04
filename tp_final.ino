@@ -87,10 +87,12 @@ void loop() {
       digitalWrite(ledhumalar, HIGH);
     }
     if(buzzmodo==1){
-      EasyBuzzer.singleBeep(700, 1500);
+      EasyBuzzer.beep(700);
+      delay(1500);
       EasyBuzzer.stopBeep();
       delay(1000);
-      EasyBuzzer.singleBeep(700, 1500);
+      EasyBuzzer.beep(700);
+      delay(1500);
       EasyBuzzer.stopBeep();
       delay(500);
     }
@@ -103,16 +105,6 @@ void loop() {
   if(h<hmax){
     digitalWrite(ledhumok, HIGH);
   }
-  
-                                  //Prendido/apagado del sonido del buzzer alarma
-  if(digitalRead(boton)==HIGH){
-    if(buzzmodo==0){
-      buzzmodo=1;
-    }
-    else{
-      buzzmodo=0;
-    }
-  }
 
   delay(1000);
                                  //Apagado de leds
@@ -122,6 +114,18 @@ void loop() {
   digitalWrite(ledhumalar, LOW);
 
   delay(5000);
+
+                                    //Prendido/apagado del sonido del buzzer alarma
+  if(digitalRead(boton)==HIGH){
+    if(buzzmodo==0){
+      buzzmodo=1;
+
+    }
+    else if(buzzmodo==1){
+      buzzmodo=0;
+    }
+  }
+  EasyBuzzer.stopBeep();
 }
 
 void serialEvent() {
